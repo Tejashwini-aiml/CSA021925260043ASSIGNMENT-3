@@ -1,0 +1,76 @@
+#include <stdio.h>
+
+int main()
+{
+    int candidates = 4;
+
+    int votes[] = {
+        1, 2, 3, 1, 2, 4, 1, 3, 2, 4,
+        1, 2, 0, 5, -1
+    };
+
+    int n = sizeof(votes) / sizeof(votes[0]);
+
+    int count[13] = {0};
+    int valid = 0, invalid = 0;
+
+    /* Count votes */
+    for (int i = 0; i < n; i++)
+    {
+        if (votes[i] >= 1 && votes[i] <= candidates)
+        {
+            count[votes[i]]++;
+            valid++;
+        }
+        else
+        {
+            invalid++;
+        }
+    }
+
+    /* Display vote counts */
+    printf("Valid votes: %d\n", valid);
+    printf("Invalid votes: %d\n", invalid);
+
+    /* Sort candidates by votes in descending order */
+    int order[13];
+
+    for (int i = 1; i <= candidates; i++)
+        order[i] = i;
+
+    for (int i = 1; i < candidates; i++)
+    {
+        for (int j = i + 1; j <= candidates; j++)
+        {
+            if (count[order[i]] < count[order[j]])
+            {
+                int temp = order[i];
+                order[i] = order[j];
+                order[j] = temp;
+            }
+        }
+    }
+
+    printf("Vote count in descending order:\n");
+
+    for (int i = 1; i <= candidates; i++)
+        printf("Candidate %d: %d votes\n",
+               order[i], count[order[i]]);
+
+    /* Find winner and tie */
+    int max = count[order[1]];
+    int tie = 0;
+
+    for (int i = 2; i <= candidates; i++)
+    {
+        if (count[order[i]] == max)
+            tie = 1;
+    }
+
+    if (tie)
+        printf("Result: Tie\n");
+    else
+        printf("Winner: Candidate %d\n", order[1]);
+
+    return 0;
+}
