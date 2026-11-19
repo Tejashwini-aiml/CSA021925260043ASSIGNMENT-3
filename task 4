@@ -1,0 +1,103 @@
+#include <stdio.h>
+
+#define DISTRICTS 3
+#define MONTHS 4
+
+void districtTotals(int rain[DISTRICTS][MONTHS])
+{
+    int i, j, total;
+
+    printf("District totals:\n");
+
+    for (i = 0; i < DISTRICTS; i++)
+    {
+        total = 0;
+
+        for (j = 0; j < MONTHS; j++)
+            total += rain[i][j];
+
+        printf("District %d = %d\n", i + 1, total);
+    }
+}
+
+void monthlyAverage(int rain[DISTRICTS][MONTHS])
+{
+    int j, total;
+
+    printf("Monthly averages:\n");
+
+    for (j = 0; j < MONTHS; j++)
+    {
+        total = 0;
+
+        for (int i = 0; i < DISTRICTS; i++)
+            total += rain[i][j];
+
+        printf("Month %d = %.2f\n", j + 1,
+               (float)total / DISTRICTS);
+    }
+}
+
+void maximumRainfall(int rain[DISTRICTS][MONTHS])
+{
+    int max = rain[0][0], d = 0, m = 0;
+
+    for (int i = 0; i < DISTRICTS; i++)
+    {
+        for (int j = 0; j < MONTHS; j++)
+        {
+            if (rain[i][j] > max)
+            {
+                max = rain[i][j];
+                d = i;
+                m = j;
+            }
+        }
+    }
+
+    printf("Maximum rainfall = %d\n", max);
+    printf("District = %d, Month = %d\n", d + 1, m + 1);
+}
+
+void deficientDistricts(int rain[DISTRICTS][MONTHS])
+{
+    int total = 0;
+
+    for (int i = 0; i < DISTRICTS; i++)
+        for (int j = 0; j < MONTHS; j++)
+            total += rain[i][j];
+
+    float stateAverage = (float)total / (DISTRICTS * MONTHS);
+
+    printf("State average = %.2f\n", stateAverage);
+    printf("Deficient districts:\n");
+
+    for (int i = 0; i < DISTRICTS; i++)
+    {
+        int sum = 0;
+
+        for (int j = 0; j < MONTHS; j++)
+            sum += rain[i][j];
+
+        float districtAverage = (float)sum / MONTHS;
+
+        if (districtAverage < 0.6 * stateAverage)
+            printf("District %d\n", i + 1);
+    }
+}
+
+int main()
+{
+    int rain[3][4] = {
+        {100, 200, 50, 80},
+        {40, 60, 20, 30},
+        {300, 250, 100, 90}
+    };
+
+    districtTotals(rain);
+    monthlyAverage(rain);
+    maximumRainfall(rain);
+    deficientDistricts(rain);
+
+    return 0;
+}
